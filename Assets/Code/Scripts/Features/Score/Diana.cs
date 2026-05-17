@@ -13,7 +13,7 @@ namespace Features.Score
 
         public int Score => _lastScore;
 
-        public void ApplyScore(Vector3 hitPoint)
+        public void ApplyScore(Vector3 hitPoint, TypeShot typeShot)
         {
             float distanceToCenter = Vector2.Distance(
                 new Vector2(hitPoint.x, hitPoint.y),
@@ -30,7 +30,9 @@ namespace Features.Score
             }
 
             OnScoreApplied?.Invoke(_lastScore);
-            print($"Diana hit! Distance: {distanceToCenter:F2} | Score: {_lastScore}");
+            ScoreMediator.Publish(ScoreEventType.ScoreApplied, _lastScore);
+            ShotMediator.Publish(ShotEventType.ShotApplied, typeShot);
+            print($"Diana hit! Distance: {distanceToCenter:F2} | Score: {_lastScore} | TypeShot: {typeShot}");
         }
     }
 }

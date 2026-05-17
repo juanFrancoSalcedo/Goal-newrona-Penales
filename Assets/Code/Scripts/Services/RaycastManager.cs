@@ -1,7 +1,8 @@
+using B_Extensions;
+using Features;
+using Features.Score;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using B_Extensions;
-using Features.Score;
 
 namespace Services
 {
@@ -33,10 +34,13 @@ namespace Services
                 IScoreReceptor receptor = hit.collider.GetComponent<IScoreReceptor>();
                 if (receptor != null)
                 {
-                    receptor.ApplyScore(hit.point);
+                    if (GameStateContext.State == GameEventType.GameStarted)
+                    { 
+                        receptor.ApplyScore(hit.point, TypeShot.Goal);
+                        EndGameManager.Instance.UpdateScore();
+                    }
                 }
             }
-
             Debug.DrawRay(ray.origin, endPoint - ray.origin, Color.blue, 0.1f);
         }
 
