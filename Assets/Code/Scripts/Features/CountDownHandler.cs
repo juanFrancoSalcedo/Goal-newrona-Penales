@@ -1,5 +1,6 @@
 using Features;
 using Features.Score;
+using Services;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -29,15 +30,18 @@ public class CountDownHandler : MonoBehaviour
 
     private void FinishCountDown()
     {
+        RaycastManager.Instance.Locked = false;
         gameTimer.ResumeTimer();
     }
 
     private void OnShotApplied(TypeShot arg0)
     {
+        RaycastManager.Instance.Locked = true;
         StartCoroutine(DoShow());
     }
     private IEnumerator DoShow() 
     {
+
         yield return new WaitForSeconds(1.9f);
         if (gameTimer != null)
             gameTimer.PauseTimer();

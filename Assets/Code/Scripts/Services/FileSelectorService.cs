@@ -7,10 +7,9 @@ namespace Services
 {
     public class FileSelectorService : Singleton<FileSelectorService>
     {
-        private const string DestinationFileName = "texture.png";
         public static event System.Action OnFileLoaded;
 
-        public void OpenFileBrowser()
+        public void OpenFileBrowser(string destinationFileName = "texture.png")
         {
             var extensions = new ExtensionFilter[]
             {
@@ -21,15 +20,15 @@ namespace Services
 
             if (paths != null && paths.Length > 0 && !string.IsNullOrEmpty(paths[0]))
             {
-                CopyToStreamingAssets(paths[0]);
+                CopyToStreamingAssets(paths[0], destinationFileName);
             }
         }
 
-        private void CopyToStreamingAssets(string sourcePath)
+        private void CopyToStreamingAssets(string sourcePath, string destinationFileName)
         {
             try
             {
-                string destPath = Path.Combine(Application.streamingAssetsPath, DestinationFileName);
+                string destPath = Path.Combine(Application.streamingAssetsPath, destinationFileName);
 
                 if (!Directory.Exists(Application.streamingAssetsPath))
                 {

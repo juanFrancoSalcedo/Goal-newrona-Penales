@@ -3,5 +3,6 @@ public enum GameEventType
     Tutorial,
     IntroCountDown,
     GameStarted,
-    GameFinished
+    GameFinished,
+    FormSubmitted
 }

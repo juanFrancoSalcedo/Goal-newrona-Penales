@@ -1,7 +1,6 @@
 using B_Extensions;
 using Services;
 using System;
-using UnityEngine;
 
 namespace Features.Score
 {

@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Services;
 using System;
 using TMPro;
 using UnityEngine;
@@ -6,7 +7,7 @@ using UnityEngine.Events;
 
 namespace Features
 {
-    public class CountdownTimer : MonoBehaviour
+    public class CountdownTimer : MonoBehaviour,IAdminListener
     {
         [SerializeField] private float _duration = 3f;
         [SerializeField] private TMP_Text _displayText;
@@ -20,6 +21,12 @@ namespace Features
         private bool _isRunning;
         private int _previousValue;
 
+        private void OnEnable()
+        {
+            if (CountdownDataService.HasDuration())
+                _duration = CountdownDataService.LoadDuration();
+        }
+
         public void Begin()
         {
             _remaining = _duration;
@@ -27,6 +34,8 @@ namespace Features
             _previousValue = int.MaxValue;
             UpdateDisplay();
         }
+
+        public void SetDuration(float duration) => _duration = duration;
 
         public void Stop() => _isRunning = false;
 
@@ -61,6 +70,11 @@ namespace Features
                 _displayText.transform.DOPunchScale(Vector3.one * _punchScale, _punchDuration);
                 _previousValue = currentValue;
             }
+        }
+
+        public void UpdateBehaviour()
+        {
+            _duration = CountdownDataService.LoadDuration();
         }
     }
 }

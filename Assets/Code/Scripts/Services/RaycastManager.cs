@@ -11,6 +11,7 @@ namespace Services
         [SerializeField] private Camera mainCamera;
         [SerializeField] private float rayDistance = 100f;
         [SerializeField] private LayerMask receptorLayer;
+        public bool Locked = false;
 
         private new void Awake()
         {
@@ -23,7 +24,10 @@ namespace Services
 
         public void CastRay(Vector2 screenPosition)
         {
-            if (mainCamera == null) { return; }
+            if (mainCamera == null) 
+                return;
+            if (Locked)
+                return;
 
             Ray ray = mainCamera.ScreenPointToRay(screenPosition);
             Vector3 endPoint = ray.GetPoint(rayDistance);
@@ -46,7 +50,8 @@ namespace Services
 
         public void CastRayFromMouse()
         {
-            if (Mouse.current == null) { return; }
+            if (Mouse.current == null) 
+                return;
             CastRay(Mouse.current.position.ReadValue());
         }
     }

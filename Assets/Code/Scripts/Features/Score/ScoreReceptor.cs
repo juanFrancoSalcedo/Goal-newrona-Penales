@@ -17,7 +17,7 @@ namespace Features.Score
                 OnScoreApplied?.Invoke();
                 ScoreMediator.Publish(ScoreEventType.ScoreApplied, score);
                 ShotMediator.Publish(ShotEventType.ShotApplied, score <= 0?TypeShot.Wrong:TypeShot.Goal);
-                print($"Score applied: {score} | TypeShot: {typeShot}");
+                Debug.Log($"Score applied: {score} | TypeShot: {typeShot}",gameObject);
             }
         }
     }

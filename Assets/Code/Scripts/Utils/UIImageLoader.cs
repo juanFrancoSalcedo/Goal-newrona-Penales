@@ -11,10 +11,12 @@ namespace Utils
         [SerializeField] private string textureFileName = "texture.png";
         [SerializeField] private bool loadOnStart = true;
 
+        public RectTransform ImageTransform => targetImage?.rectTransform;
+
         private void Start()
         {
             if (loadOnStart)
-                LoadAndApplyImage();
+                UpdateBehaviour();
         }
 
         public void LoadAndApplyImage()
@@ -48,6 +50,14 @@ namespace Utils
         public void UpdateBehaviour()
         {
             LoadAndApplyImage();
+            ScaleImage();
+        }
+
+        public void ScaleImage()
+        {
+            float savedScale = PlayerPrefs.GetFloat(KeyStorage.ImageScale, 1f);
+            if (targetImage != null)
+                targetImage.rectTransform.localScale = Vector3.one * savedScale;
         }
 
         private void ApplyImage(Texture2D texture)

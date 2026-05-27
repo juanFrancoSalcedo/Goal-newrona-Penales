@@ -12,6 +12,7 @@ namespace Features
         //[SerializeField] private JumpManager jumpManager;
         [SerializeField] private GameObject canvasEnd;
         public static int attempts = 0;
+        public event Action<int> OnGameAttempsChanged;
 
         bool ended = false;
         private void Update()
@@ -33,6 +34,7 @@ namespace Features
         public void UpdateScore() 
         {
             attempts++;
+            OnGameAttempsChanged?.Invoke(attempts);
         }
     }
 }

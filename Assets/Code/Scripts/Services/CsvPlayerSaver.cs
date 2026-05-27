@@ -17,6 +17,9 @@ namespace Services
 
         public static void Save(PlayerData playerData)
         {
+
+            Debug.Log($"Player Data: {playerData == null}");
+            Debug.Log($"Saving player data: {playerData.nombre}, Score: {playerData.score}, Time: {playerData.tiempo}");
             try
             {
                 if (!fileInitialized)

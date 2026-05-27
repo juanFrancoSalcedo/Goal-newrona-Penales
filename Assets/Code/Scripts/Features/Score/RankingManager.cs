@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
+using B_Extensions;
 using Services;
 using UnityEngine;
 
 namespace Features.Score
 {
-    public class RankingManager : MonoBehaviour
+    public class RankingManager : Singleton<RankingManager>
     {
         [SerializeField] private List<CardRanking> cardRankings = new List<CardRanking>();
         [SerializeField] CardRanking currentPlayerCard;
@@ -21,17 +22,25 @@ namespace Features.Score
             Invoke(nameof(UpdateRanking),0.1f);
         }
 
+        public void RegisterCurrentPlayer(string nombre, string correo, string telefono)
+        {
+            var uid = Guid.NewGuid().ToString();
+            float time = timer != null ? timer.GetCurrentTime() : 0f;
+            currentPlayer = new PlayerData(uid, nombre, correo, telefono, 0, time);
+
+        }
+
         private void UpdateRanking()
         {
+            //UpdateRanking();
+            currentPlayer.score = ScoreManager.Instance.TotalScore;
+
             if (GameStateContext.State != GameEventType.GameFinished)
+            {
+                print("RankingManager: Ignoring ranking update because the game is not finished.");
                 return;
-
-            var dd = RandomToken.CreateRandomToken(5);
-            var newUid = Guid.NewGuid().ToString();
-            PlayerData playerData = new PlayerData(newUid, $"Player {dd}", $"Coreo{dd}@prueba.com", "3124445555", ScoreManager.Instance.TotalScore, timer != null ? timer.GetCurrentTime() : 0f);
-            CsvPlayerSaver.Save(playerData);
-            currentPlayer = playerData;
-
+            }
+            CsvPlayerSaver.Save(currentPlayer);
 
             List<PlayerData> players = CsvPlayerSaver.GetSavedPlayers();
 
@@ -39,7 +48,7 @@ namespace Features.Score
             {
                 if (i < MaxRankingPositions && i < players.Count)
                 { 
-                    if (currentPlayer.uid.Equals(players[i].uid))
+                    if (currentPlayer != null && currentPlayer.uid.Equals(players[i].uid))
                         currentPlayerCard.SetData(i+1,currentPlayer.nombre, currentPlayer.score);
                 
                     cardRankings[i].SetData(i + 1, players[i].nombre, players[i].score);

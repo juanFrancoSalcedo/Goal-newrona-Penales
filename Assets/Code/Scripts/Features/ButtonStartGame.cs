@@ -1,4 +1,5 @@
 using B_Extensions;
+using Services;
 using System;
 using UnityEngine;
 
@@ -20,7 +21,7 @@ public class ButtonStartGame : BaseButtonAttendant
     private void StartGame()
     {
         GameStateContext.ChangeState(GameEventType.IntroCountDown);
-        Invoke(nameof(NextPos),5f);
+        Invoke(nameof(NextPos),CountdownDataService.LoadDuration());
     }
 
     private void NextPos() 
