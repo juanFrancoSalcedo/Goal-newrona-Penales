@@ -26,7 +26,7 @@ public class ResetHandler : MonoBehaviour
             callerScene.LoadScene();
         }
 
-        if(Input.anyKey)
+        if(Input.anyKey || Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
         {
             if(resetCoroutine != null)
             {

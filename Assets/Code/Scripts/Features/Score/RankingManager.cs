@@ -13,11 +13,11 @@ namespace Features.Score
         [SerializeField] private Timer timer;
         private const int MaxRankingPositions = 5;
 
-        private void OnEnable() => ScoreMediator.Subscribe(ScoreEventType.TotalScoreChanged, OnTotalScoreChanged);
-        private void OnDisable() => ScoreMediator.Unsubscribe(ScoreEventType.TotalScoreChanged, OnTotalScoreChanged);
+        private void OnEnable() => GameStateContext.GameStateMediator.Subscribe(GameEventType.GameFinished, OnTotalScoreChanged);
+        private void OnDisable() => GameStateContext.GameStateMediator.Unsubscribe(GameEventType.GameFinished, OnTotalScoreChanged);
 
         PlayerData currentPlayer;
-        private void OnTotalScoreChanged(int totalScore)
+        private void OnTotalScoreChanged()
         {
             Invoke(nameof(UpdateRanking),0.1f);
         }
@@ -34,6 +34,7 @@ namespace Features.Score
         {
             //UpdateRanking();
             currentPlayer.score = ScoreManager.Instance.TotalScore;
+            currentPlayer.tiempo = timer != null ? timer.GetCurrentTime() : 0f;
 
             if (GameStateContext.State != GameEventType.GameFinished)
             {

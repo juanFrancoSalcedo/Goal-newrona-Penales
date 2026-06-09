@@ -19,21 +19,35 @@ namespace Features.Score
         [SerializeField] bool isLeft = false;
         private int _lastScore;
         static int dianaLevel;
+        static bool fourActive;
         public int Score => _lastScore *multiplier;
 
         Vector3 posInit;
         Vector3 scaleInit;
 
-        int multiplier =1;
+        static int multiplier =1;
 
         private void Start()
         {
             posInit = transform.position;
             scaleInit = transform.localScale;
+            multiplier = 1;
+            if(isLeft)
+                fourActive = Random.value <0.5f;
         }
 
-        private void OnEnable() => EndGameManager.Instance.OnGameAttempsChanged += Instance_OnGameAttempsChanged;
-        private void OnDisable() => EndGameManager.Instance.OnGameAttempsChanged -= Instance_OnGameAttempsChanged;
+        private void OnEnable()
+        {
+            EndGameManager.Instance.OnGameAttempsChanged += Instance_OnGameAttempsChanged;
+            GameStateContext.GameStateMediator.Subscribe(GameEventType.GameStarted, ()=>dianaLevel =0);
+        }
+
+        private void OnDisable()
+        {
+            if(EndGameManager.Instance != null)
+                EndGameManager.Instance.OnGameAttempsChanged -= Instance_OnGameAttempsChanged;
+            GameStateContext.GameStateMediator.Subscribe(GameEventType.GameStarted, () => dianaLevel = 0);
+        }
 
         Sequence finalSequence;
         Sequence midSequence ;
@@ -44,32 +58,30 @@ namespace Features.Score
             {
                 case 1:
                     transform.DOScale(scaleInit*0.7f, pathDuration).SetEase(Ease.InOutSine);
+                    for(int i=0;i<scoreRanges.Length; i++)
+                    {
+                        scoreRanges[i].minDistance *= 0.7f;
+                        scoreRanges[i].maxDistance *= 0.7f;
+                    }
+
                     break;
                 case 2:
                     transform.DOMove(posInit + Vector3.up, pathDuration).SetEase(Ease.InOutSine);
-                    multiplier = 2;
+                    multiplier++;
                 break;
 
                 case 3:
                     transform.DOKill();
-                    finalSequence = DOTween.Sequence();
-                    finalSequence.Append(transform.DOMove(posInit + Vector3.down, pathDuration).SetEase(Ease.Linear));
-                    finalSequence.Append(transform.DOMove(posInit + Vector3.up*2, pathDuration).SetEase(Ease.Linear));
-                    finalSequence.SetLoops(-1);
+                    SequenceTwo();
+                    multiplier++;
                     break;
                 case 4:
                     transform.DOKill();
                     midSequence = DOTween.Sequence();
-                    if (Random.value < 0.5f)
-                    {
-                        if (isLeft)
-                            midSequence.Append(transform.DOScale(scaleInit * 0, 0.2f).SetEase(Ease.Linear));
-                    }
-                    else
-                    {
-                        if (!isLeft)
-                            midSequence.Append(transform.DOScale(scaleInit * 0, 0.2f).SetEase(Ease.Linear));
-                    }
+                    if (isLeft && fourActive)
+                        midSequence.Append(transform.DOScale(scaleInit * 0, 0.2f).SetEase(Ease.Linear));
+                    else if(!isLeft && !fourActive)
+                        midSequence.Append(transform.DOScale(scaleInit * 0, 0.2f).SetEase(Ease.Linear));
 
                     midSequence.Append(transform.DOMove(posInit + Vector3.up * 2, pathDuration).SetEase(Ease.InOutSine));
                     finalSequence.Kill();
@@ -88,6 +100,25 @@ namespace Features.Score
                 default:
                     break;
             }
+        }
+
+        private void SequenceTwo() 
+        {
+            if (finalSequence == null)
+            { 
+                finalSequence = DOTween.Sequence();
+                finalSequence.Append(transform.DOMove(posInit + Vector3.down, pathDuration).SetEase(Ease.Linear));
+                finalSequence.Append(transform.DOMove(posInit + Vector3.up * 2, pathDuration).SetEase(Ease.Linear));
+                finalSequence.Append(transform.DOMove(transform.position, pathDuration/3).SetEase(Ease.Linear));
+                finalSequence.SetLoops(-1, LoopType.Restart);
+            }
+            //sequence.OnComplete(() =>{
+            //        SequenceTwo();
+            //    //if (dianaLevel == 3)
+            //    //{ 
+            //    //}
+            //});
+            //Invoke(nameof(SequenceTwo), pathDuration * 3);
         }
 
 

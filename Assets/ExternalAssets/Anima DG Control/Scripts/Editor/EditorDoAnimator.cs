@@ -77,7 +77,10 @@ public class EditorDoAnimator : BaseEditorAnimator
         auxArg.displayRotation = EditorGUILayout.Toggle(auxArg.displayRotation);
         EditorGUILayout.EndHorizontal();
         if (auxArg.displayRotation)
+        { 
             auxArg.targetRotation = EditorGUILayout.Vector3Field("Target Rotation", auxArg.targetRotation);
+            auxArg.rotationType = (RotateMode)EditorGUILayout.EnumPopup("Rotation type", auxArg.rotationType);
+        }
         EditorGUILayout.EndVertical();//---- quadPos
 
     }

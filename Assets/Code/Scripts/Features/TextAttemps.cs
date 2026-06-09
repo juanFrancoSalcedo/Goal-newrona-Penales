@@ -16,7 +16,7 @@ public class TextAttemps : MonoBehaviour
 
     void Update()
     {
-        textCompo.text = string.Format(format, EndGameManager.attempts);
+        textCompo.text = string.Format(format, EndGameManager.Instance.attempts);
     }
 }
 

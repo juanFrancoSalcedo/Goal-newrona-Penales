@@ -32,7 +32,7 @@ namespace Features
         {
             currentState = typeShot;
 
-            if (EndGameManager.attempts != attempt)
+            if (EndGameManager.Instance.attempts != attempt)
                 return;
 
             foreach (var mapping in mappings)
