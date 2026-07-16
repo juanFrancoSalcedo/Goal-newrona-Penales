@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Features.Score;
 using UnityEngine.Events;
+using B_Extensions;
 
 public class FormController : MonoBehaviour, IFormControllable
 {
@@ -105,7 +106,17 @@ public class FormController : MonoBehaviour, IFormControllable
         ToggleHabeas.GetComponent<IFormInput>().OnError -= ErrorInput;
 
         FormSubmitable.OnPass -= Submit;
+    }
 
+
+    private void Update() 
+    {
+        print($"{GameStateContext.State}");
+        if (Input.GetKeyDown(KeyCode.Backspace) && (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && GameStateContext.State == GameEventType.Tutorial)
+        {
+            RankingManager.Instance.RegisterCurrentPlayer("guest lastname", "guest@co.com", "3330009999");
+            FormSubmit.GetComponent<BaseButtonAttendant>().Click();
+        }
     }
 
     private void CheckInputUseProduct(object obj)
@@ -186,5 +197,4 @@ public class FormController : MonoBehaviour, IFormControllable
         onPass?.Invoke();
         print($"Form submitted with Name: {nombre}, Email: {correo}, Cellphone: {telefono}");
     }
-    
 }

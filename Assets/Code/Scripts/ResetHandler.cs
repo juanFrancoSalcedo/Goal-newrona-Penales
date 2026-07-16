@@ -16,14 +16,20 @@ public class ResetHandler : MonoBehaviour
     IEnumerator WaitInactivity()
     {
         yield return new WaitForSeconds(inactivityTime);
+        ResetGame();
+    }
+
+    public void ResetGame() 
+    {
         callerScene.LoadScene();
+        GameStateContext.ChangeState(GameEventType.Tutorial);
     }
 
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.Escape))   
         {
-            callerScene.LoadScene();
+            ResetGame();
         }
 
         if(Input.anyKey || Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))

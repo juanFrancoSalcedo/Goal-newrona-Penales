@@ -19989,9 +19989,9 @@ MonoBehaviour:
   OnEnableCallback:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1567872154}
-        m_TargetAssemblyTypeName: B_Extensions.SceneLoader.CallerSceneLoader, Assembly-CSharp
-        m_MethodName: LoadScene
+      - m_Target: {fileID: 1688402578}
+        m_TargetAssemblyTypeName: ResetHandler, Assembly-CSharp
+        m_MethodName: ResetGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
